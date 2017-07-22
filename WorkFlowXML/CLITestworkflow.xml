@@ -1,0 +1,26 @@
+<workflow-app xmlns="uri:oozie:workflow:0.2" name="java-main-wf">
+    <start to="java-node"/>
+    <action name="java-node">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+            </configuration>
+            <main-class>com.oozie.examples.CLIArgumentsTest</main-class>
+						<arg>-Value_1</arg>
+						<arg>${cliArgs1}</arg>
+						<arg>-Value_2</arg>
+						<arg>${cliArgs2}</arg>
+        </java>
+        <ok to="end"/>
+        <error to="fail"/>
+    </action>
+    <kill name="fail">
+        <message>Java failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>
